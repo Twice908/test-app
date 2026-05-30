@@ -1,0 +1,15 @@
+{
+  "name": "pulse-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo app exercising all four Pulse features (Observe, Rate Limiter, Agents, Drift CI)",
+  "scripts": {
+    "dev:backend": "npm --prefix apps/backend run dev",
+    "dev:frontend": "npm --prefix apps/frontend run dev",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "install:all": "npm install && npm --prefix apps/backend install && npm --prefix apps/frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

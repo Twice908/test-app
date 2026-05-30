@@ -1,0 +1,67 @@
+name: Pulse Drift
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to snapshot / check
+        type: choice
+        required: true
+        default: staging
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    env:
+      # Pick the environment: explicit on manual dispatch, branch-derived otherwise.
+      DRIFT_ENV: ${{ github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+      PULSE_API_KEY: ${{ secrets.PULSE_API_KEY }}
+      PULSE_DRIFT_API_URL: ${{ secrets.PULSE_DRIFT_API_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install drift agent
+        run: npm install -g @pulse/drift-agent
+
+      - name: Drift snapshot
+        run: |
+          pulse-drift snapshot \
+            --env "$DRIFT_ENV" \
+            --project-key "$PULSE_API_KEY" \
+            --api-url "$PULSE_DRIFT_API_URL" \
+            --dotenv ".env.$DRIFT_ENV" \
+            --json
+
+      - name: Drift CI check
+        id: check
+        continue-on-error: true
+        run: |
+          pulse-drift ci-check \
+            --env "$DRIFT_ENV" \
+            --project-key "$PULSE_API_KEY" \
+            --api-url "$PULSE_DRIFT_API_URL" \
+            --fail-on-drift \
+            --ignore-keys CI,GITHUB_TOKEN,RUNNER_TEMP,GITHUB_ACTIONS \
+            --json
+
+      - name: Report outcome
+        run: |
+          if [ "${{ steps.check.outcome }}" = "failure" ]; then
+            echo "::warning::Pulse drift detected for environment '$DRIFT_ENV' — review the dashboard."
+          else
+            echo "::notice::No Pulse drift detected for environment '$DRIFT_ENV'."
+          fi

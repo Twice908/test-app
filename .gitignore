@@ -1,0 +1,11 @@
+node_modules/
+.next/
+dist/
+out/
+*.log
+npm-debug.log*
+
+# Local Next.js env override (backend URL). The root .env / .env.staging /
+# .env.production files are intentionally NOT ignored so the drift CI workflow
+# can read them via --dotenv. They only contain REPLACE_ME placeholders.
+apps/frontend/.env.local
