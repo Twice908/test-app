@@ -10,7 +10,9 @@
     "build": "node --check src/index.js && echo \"backend is plain JS — nothing to build\""
   },
   "dependencies": {
-    "@pulse/agent": "file:vendor/pulse-agent-0.1.0.tgz",
+    "@ai-sdk/google": "^3.0.80",
+    "@mastra/core": "^1.37.1",
+    "@pulse/agent": "file:../../../PAO/packages/pulse-agent/pulse-agent-0.1.0.tgz",
     "@pulse/drift-agent": "file:vendor/pulse-drift-agent-0.0.1.tgz",
     "@pulse/node": "file:vendor/pulse-node-0.1.0.tgz",
     "cors": "^2.8.5",

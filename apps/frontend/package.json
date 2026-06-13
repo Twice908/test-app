@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@pulse/agent": "file:../../../PAO/packages/pulse-agent/pulse-agent-0.1.0.tgz",
     "next": "14.2.5",
     "pulse-demo": "file:../..",
     "react": "^18.3.1",

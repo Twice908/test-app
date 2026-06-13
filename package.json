@@ -11,5 +11,10 @@
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.80",
+    "@mastra/core": "^1.37.1",
+    "@pulse/agent": "file:../PAO/packages/pulse-agent/pulse-agent-0.1.0.tgz"
   }
 }
